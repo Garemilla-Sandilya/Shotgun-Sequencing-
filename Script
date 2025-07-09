@@ -1,0 +1,149 @@
+# Shortgun Sequencing_Analysis
+
+# Step 1: "Running FastQC"
+```bash
+#SRR3950487
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR3950487_1.fastq.gz SRR3950487_2.fastq.gz
+#SRR5898917
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR5898917_1.fastq.gz SRR5898917_2.fastq.gz
+#SRR3950486
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR3950486_1.fastq.gz SRR3950486_2.fastq.gz
+#SRR5898915
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR5898915_1.fastq.gz SRR5898915_2.fastq.gz
+```
+
+# Step:2 "Running Triommatic"
+```bash
+#SRR3950487
+java -jar /home/BIB/Software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 SRR3950487_1.fastq.gz SRR3950487_2.fastq.gz SRR3950487_1P.fastq.gz SRR3950487_1U.fastq.gz SRR3950487_2P.fastq.gz SRR3950487_2U.fastq.gz ILLUMINACLIP:/home/BIB/Software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:50
+
+#SRR5898917
+java -jar /home/BIB/Software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 SRR5898917_1.fastq.gz SRR5898917_2.fastq.gz SRR5898917_1P.fastq.gz SRR5898917_1U.fastq.gz SRR5898917_2P.fastq.gz SRR5898917_2U.fastq.gz ILLUMINACLIP:/home/BIB/Software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:50
+
+#SRR3950486
+java -jar /home/BIB/Software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 SRR3950486_1.fastq.gz SRR3950486_2.fastq.gz SRR3950486_1P.fastq.gz SRR3950486_1U.fastq.gz SRR3950486_2P.fastq.gz SRR3950486_2U.fastq.gz ILLUMINACLIP:/home/BIB/Software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:50
+
+#SRR5898915
+java -jar /home/BIB/Software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 8 SRR5898915_1.fastq.gz SRR5898915_2.fastq.gz SRR5898915_1P.fastq.gz SRR5898915_1U.fastq.gz SRR5898915_2P.fastq.gz SRR5898915_2U.fastq.gz ILLUMINACLIP:/home/BIB/Software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:4:20 MINLEN:50
+```
+
+# Step:3 "Running FastQC on paired trimmed reads"
+```bash
+#SRR3950487
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR3950487_1P.fastq.gz SRR3950487_2P.fastq.gz
+#SRR5898917
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR5898917_1P.fastq.gz SRR5898917_2P.fastq.gz
+#SRR3950486
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR3950486_1P.fastq.gz SRR3950486_2P.fastq.gz
+#SRR5898915
+/home/BIB/Software/FastQC_v0.12.1/fastqc SRR5898915_1P.fastq.gz SRR5898915_2P.fastq.gz
+```
+
+# Step:4 "Alignment using bwa"
+```bash
+#SRR3950487
+/home/BIB/Software/bwa/bwa mem /home/BIB/Database/HumanGenome_hg38/hg38_index SRR3950487_1P.fastq.gz SRR3950487_2P.fastq.gz  > SRR3950487_aligned.sam
+#SRR5898917
+/home/BIB/Software/bwa/bwa mem /home/BIB/Database/HumanGenome_hg38/hg38_index SRR5898917_1P.fastq.gz SRR5898917_2P.fastq.gz  > SRR5898917_aligned.sam
+#SRR3950486
+/home/BIB/Software/bwa/bwa mem /home/BIB/Database/HumanGenome_hg38/hg38_index SRR3950486_1P.fastq.gz SRR3950486_2P.fastq.gz  > SRR3950486_aligned.sam
+#SRR5898915
+/home/BIB/Software/bwa/bwa mem /home/BIB/Database/HumanGenome_hg38/hg38_index SRR5898915_1P.fastq.gz SRR5898915_2P.fastq.gz  > SRR5898915_aligned.sam
+```
+
+# Step:5 "Convert sam to bam"
+```bash
+#SRR3950487
+samtools view -S -b SRR3950487_aligned.sam -o SRR3950487_aligned.bam
+#SRR5898917
+samtools view -S -b SRR5898917_aligned.sam -o SRR5898917_aligned.bam
+#SRR3950486
+samtools view -S -b SRR3950486_aligned.sam -o SRR3950486_aligned.bam
+#SRR5898915
+samtools view -S -b SRR5898915_aligned.sam -o SRR5898915_aligned.bam
+```
+
+# Step:6 "Sorted bam"
+```bash
+#SRR3950487
+samtools sort SRR3950487_aligned.bam  -o SRR3950487_sorted.bam
+#SRR5898917
+samtools sort SRR5898917_aligned.bam  -o SRR5898917_sorted.bam
+#SRR3950486
+samtools sort SRR3950486_aligned.bam  -o SRR3950486_sorted.bam
+#SRR5898915
+samtools sort SRR5898915_aligned.bam  -o SRR5898915_sorted.bam
+```
+
+# Step7:"Extract umapped reads"
+```bash
+#SRR3950487
+samtools view -b -f 4 SRR3950487_sorted.bam>SRR3950487_unmapped.bam
+#SRR5898917
+samtools view -b -f 4 SRR5898917_sorted.bam>SRR5898917_unmapped.bam
+#SRR3950486
+samtools view -b -f 4 SRR3950486_sorted.bam>SRR3950486_unmapped.bam
+#SRR5898915
+samtools view -b -f 4 SRR5898915_sorted.bam>SRR5898915_unmapped.bam
+```
+
+# Step8:"convert unmapped BAM to Fastq"
+```bash
+#SRR3950487
+samtools fastq -1 SRR3950487_unmapped_1.fastq.gz  -2 SRR3950487_unmapped_2.fastq.gz  -0 /dev/null -s /dev/null -n SRR3950487_unmapped.bam
+#SRR5898917
+samtools fastq -1 SRR5898917_unmapped_1.fastq.gz  -2 SRR5898917_unmapped_2.fastq.gz  -0 /dev/null -s /dev/null -n SRR5898917_unmapped.bam
+#SRR3950486
+samtools fastq -1 SRR3950486_unmapped_1.fastq.gz  -2 SRR3950486_unmapped_2.fastq.gz  -0 /dev/null -s /dev/null -n SRR3950486_unmapped.bam
+#SRR5898915
+samtools fastq -1 SRR5898915_unmapped_1.fastq.gz  -2 SRR5898915_unmapped_2.fastq.gz  -0 /dev/null -s /dev/null -n SRR5898915_unmapped.bam
+```
+
+# Step9:"Run Kraken (taxonomic classification)"
+```bash
+#SRR3950487
+kraken2 --db /home/BIB/Database/Kraken2_8mer --paired --report SRR3950487_kraken2_repor.txt --output SRR3950487_kraken2_output.txt SRR3950487_unmapped_1.fastq.gz   SRR3950487_unmapped_2.fastq.gz
+#SRR5898917
+kraken2 --db /home/BIB/Database/Kraken2_8mer --paired --report SRR5898917_kraken2_repor.txt --output SRR5898917_kraken2_output.txt SRR5898917_unmapped_1.fastq.gz   SRR5898917_unmapped_2.fastq.gz
+#SRR3950486
+kraken2 --db /home/BIB/Database/Kraken2_8mer --paired --report SRR3950486_kraken2_repor.txt --output SRR3950486_kraken2_output.txt SRR3950486_unmapped_1.fastq.gz   SRR3950486_unmapped_2.fastq.gz
+#SRR5898915
+kraken2 --db /home/BIB/Database/Kraken2_8mer --paired --report SRR5898915_kraken2_repor.txt --output SRR5898915_kraken2_output.txt SRR5898915_unmapped_1.fastq.gz   SRR5898915_unmapped_2.fastq.gz
+```
+
+# Step10:"Run Bracken"
+```bash
+#SRR3950487
+/home/BIB/Software/Bracken/bracken -d /home/BIB/Database/Kraken2_8mer -i SRR3950487_kraken2_repor.txt -o SRR3950487_bracken1_species.txt -r 100 -l S
+#SRR5898917
+/home/BIB/Software/Bracken/bracken -d /home/BIB/Database/Kraken2_8mer -i SRR5898917_kraken2_repor.txt -o SRR5898917_bracken1_species.txt -r 100 -l S
+#SRR3950486
+/home/BIB/Software/Bracken/bracken -d /home/BIB/Database/Kraken2_8mer -i SRR3950486_kraken2_repor.txt -o SRR3950486_bracken1_species.txt -r 100 -l S
+#SRR5898915
+/home/BIB/Software/Bracken/bracken -d /home/BIB/Database/Kraken2_8mer -i SRR5898915_kraken2_repor.txt -o SRR5898915_bracken1_species.txt -r 100 -l S
+```
+
+# Step11:"Merge bracken files"
+```bash
+python3 2_merge_abundance.py
+```
+
+# Step12:"shnaon index"
+```bash
+python3 3_shanon_index.py
+```
+
+# Step13:"comparative analysis"
+```bash
+python3 4_t-test.py
+```
+
+# Step14:"Heatmap"
+```bash
+python3 5_heatmap.py
+```
+
+# Step15:"Volcano plot"
+```bash
+python3 6_volcano_plot.py
+```
